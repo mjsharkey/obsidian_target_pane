@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="880" height="440" viewBox="0 0 880 440" font-family="-apple-system, Segoe UI, Roboto, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#a882ff"/>
+    </marker>
+  </defs>
+
+  <!-- backdrop -->
+  <rect width="880" height="440" rx="14" fill="#1e1e22"/>
+
+  <!-- app window -->
+  <rect x="24" y="60" width="832" height="320" rx="10" fill="#26262b" stroke="#3a3a42" stroke-width="1"/>
+  <!-- title bar -->
+  <rect x="24" y="60" width="832" height="34" rx="10" fill="#2f2f36"/>
+  <rect x="24" y="80" width="832" height="14" fill="#2f2f36"/>
+  <circle cx="46" cy="77" r="5" fill="#ff5f57"/>
+  <circle cx="64" cy="77" r="5" fill="#febc2e"/>
+  <circle cx="82" cy="77" r="5" fill="#28c840"/>
+
+  <!-- title -->
+  <text x="440" y="38" text-anchor="middle" fill="#ededf2" font-size="22" font-weight="700">Target Pane</text>
+
+  <!-- LEFT pane (source) -->
+  <rect x="44" y="106" width="372" height="258" rx="8" fill="#202024" stroke="#34343c" stroke-width="1"/>
+  <!-- tab -->
+  <rect x="56" y="116" width="120" height="26" rx="6" fill="#2b2b32"/>
+  <text x="116" y="133" text-anchor="middle" fill="#9a9aa6" font-size="12">Daily note</text>
+  <!-- body lines -->
+  <rect x="64" y="160" width="300" height="9" rx="4.5" fill="#3a3a44"/>
+  <rect x="64" y="182" width="252" height="9" rx="4.5" fill="#3a3a44"/>
+  <!-- the link -->
+  <rect x="62" y="205" width="150" height="22" rx="5" fill="#3a2f63"/>
+  <text x="72" y="221" fill="#bfa3ff" font-size="13" font-weight="600">[[Project X]]</text>
+  <!-- cursor -->
+  <path d="M196 232 l0 22 l6 -6 l5 11 l5 -2 l-5 -11 l8 0 z" fill="#ffffff" stroke="#1e1e22" stroke-width="1"/>
+  <rect x="64" y="246" width="288" height="9" rx="4.5" fill="#34343c"/>
+  <rect x="64" y="268" width="210" height="9" rx="4.5" fill="#34343c"/>
+
+  <text x="230" y="352" text-anchor="middle" fill="#7d7d8a" font-size="12">source pane (where you click)</text>
+
+  <!-- RIGHT pane (target) -->
+  <rect x="464" y="106" width="372" height="258" rx="8" fill="#221d33" stroke="#6b4fc4" stroke-width="1.5"/>
+  <!-- tab -->
+  <rect x="476" y="116" width="120" height="26" rx="6" fill="#33285a"/>
+  <text x="536" y="133" text-anchor="middle" fill="#cdb8ff" font-size="12" font-weight="600">Project X</text>
+  <!-- target badge -->
+  <text x="812" y="134" text-anchor="end" fill="#a882ff" font-size="13" font-weight="700">🎯 target</text>
+  <!-- body of opened note -->
+  <text x="484" y="176" fill="#ededf2" font-size="17" font-weight="700">Project X</text>
+  <rect x="484" y="194" width="300" height="9" rx="4.5" fill="#46406a"/>
+  <rect x="484" y="216" width="264" height="9" rx="4.5" fill="#46406a"/>
+  <rect x="484" y="238" width="288" height="9" rx="4.5" fill="#3c3658"/>
+  <rect x="484" y="260" width="190" height="9" rx="4.5" fill="#3c3658"/>
+
+  <text x="650" y="352" text-anchor="middle" fill="#9a86d6" font-size="12">target pane (where it opens)</text>
+
+  <!-- routing arrow -->
+  <path d="M214 216 C 360 150, 430 150, 470 196" fill="none" stroke="#a882ff" stroke-width="3" stroke-linecap="round" marker-end="url(#arrow)"/>
+
+  <!-- caption -->
+  <text x="440" y="416" text-anchor="middle" fill="#c6c6d0" font-size="15">Click a link to another note and it opens in your chosen pane, no matter where you click it.</text>
+</svg>

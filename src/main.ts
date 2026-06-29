@@ -274,9 +274,7 @@ export default class TargetPanePlugin extends Plugin {
 			openLinkText: (...args: unknown[]) => Promise<void>;
 			getLeaf: (...args: unknown[]) => WorkspaceLeaf;
 		};
-		// The patched openLinkText/getLeaf below must keep `this` bound to the workspace, so they
-		// can't be arrows; we capture the plugin instance separately to reach its state/methods.
-		// eslint-disable-next-line @typescript-eslint/no-this-alias
+		// eslint-disable-next-line @typescript-eslint/no-this-alias -- the patched openLinkText/getLeaf must keep `this` bound to the workspace (so they can't be arrow functions); we capture the plugin instance separately to reach its state and methods
 		const plugin: TargetPanePlugin = this;
 		const origOpenLinkText = ws.openLinkText;
 		const origGetLeaf = ws.getLeaf;

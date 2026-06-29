@@ -100,35 +100,35 @@ git ls-remote --exit-code --tags origin "refs/tags/$VERSION" >/dev/null 2>&1 \
   && die "Tag $VERSION already exists on origin."
 
 # --- fail fast: make sure it actually builds (CI builds for real) ----------
-step "Build check (npm run build)…"
+step "Build check (npm run build)..."
 npm run build >/dev/null || die "Build failed locally — fix before releasing."
 
 # --- confirm ---------------------------------------------------------------
 if [ "$ASSUME_YES" -ne 1 ]; then
   printf '\n%sAbout to release %s:%s\n' "$YEL" "$VERSION" "$RST"
-  printf '  • bump version files to %s (if needed), commit, and push to %s\n' "$VERSION" "$UPSTREAM"
-  printf '  • create and push tag %s, which triggers the CI release (build + attest + publish)\n\n' "$VERSION"
+  printf '  - bump version files to %s (if needed), commit, and push to %s\n' "$VERSION" "$UPSTREAM"
+  printf '  - create and push tag %s, which triggers the CI release (build + attest + publish)\n\n' "$VERSION"
   read -r -p "Proceed? [y/N] " reply
   case "$reply" in [yY]|[yY][eE][sS]) ;; *) die "Aborted. No changes made." ;; esac
 fi
 
 # --- bump (only when the version actually changes) -------------------------
 if [ "$NEEDS_BUMP" -eq 1 ]; then
-  step "Bumping version files to $VERSION…"
+  step "Bumping version files to $VERSION..."
   npm version "$VERSION" --no-git-tag-version >/dev/null || die "npm version failed."
 fi
 
 # --- commit version files + notes (and push any earlier unpushed commits) --
 git add package.json manifest.json versions.json "$NOTES_FILE"
 if ! git diff --cached --quiet; then
-  step "Committing…"
+  step "Committing..."
   git commit -m "Release $VERSION" >/dev/null || die "git commit failed."
 fi
-step "Pushing branch…"
+step "Pushing branch..."
 git push || die "git push failed."
 
 # --- tag and push the tag (this is what triggers CI) -----------------------
-step "Tagging $VERSION and pushing the tag…"
+step "Tagging $VERSION and pushing the tag..."
 git tag "$VERSION" || die "git tag failed."
 git push origin "$VERSION" || die "git push (tag) failed. The branch is pushed; push the tag manually to release."
 

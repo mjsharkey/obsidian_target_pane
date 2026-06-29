@@ -1,7 +1,7 @@
 {
 	"id": "target-pane",
 	"name": "Target Pane",
-	"version": "0.1.1",
+	"version": "0.1.2",
 	"minAppVersion": "1.5.1",
 	"description": "Designate a target pane, then open links to other notes (including embedded-note links) there instead of in the current pane.",
 	"author": "Michael Sharkey",

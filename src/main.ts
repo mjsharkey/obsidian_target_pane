@@ -57,15 +57,16 @@ export default class TargetPanePlugin extends Plugin {
 		this.registerLinkClickTracking();
 
 		// Command ids are auto-prefixed with the plugin id, so they must not repeat it.
+		// Command names must not repeat the plugin name — the UI already shows it as a prefix.
 		this.addCommand({
 			id: 'set',
-			name: 'Set target pane to the active pane',
+			name: 'Set to the active pane',
 			callback: () => this.setTargetToActivePane(),
 		});
 
 		this.addCommand({
 			id: 'clear',
-			name: 'Clear target pane',
+			name: 'Clear',
 			callback: () => this.clearTarget(),
 		});
 
@@ -102,7 +103,7 @@ export default class TargetPanePlugin extends Plugin {
 
 	/** Best-effort link destination for logging (data-href in reading view, href on anchors). */
 	private extractHref(el: HTMLElement): string | null {
-		const link = el.closest('[data-href], a[href]') as HTMLElement | null;
+		const link = el.closest('[data-href], a[href]');
 		if (!link) return null;
 		return link.getAttribute('data-href') ?? link.getAttribute('href');
 	}
@@ -273,7 +274,10 @@ export default class TargetPanePlugin extends Plugin {
 			openLinkText: (...args: unknown[]) => Promise<void>;
 			getLeaf: (...args: unknown[]) => WorkspaceLeaf;
 		};
-		const plugin = this;
+		// The patched openLinkText/getLeaf below must keep `this` bound to the workspace, so they
+		// can't be arrows; we capture the plugin instance separately to reach its state/methods.
+		// eslint-disable-next-line @typescript-eslint/no-this-alias
+		const plugin: TargetPanePlugin = this;
 		const origOpenLinkText = ws.openLinkText;
 		const origGetLeaf = ws.getLeaf;
 		// Bind to the workspace so we can call it from helpers without `this` being wrong.
@@ -397,8 +401,8 @@ export default class TargetPanePlugin extends Plugin {
 				this.linkClickActive = false;
 			}, 0);
 		};
-		this.registerDomEvent(document, 'click', onLinkClick, { capture: true });
-		this.registerDomEvent(document, 'auxclick', onLinkClick, { capture: true });
+		this.registerDomEvent(activeDocument, 'click', onLinkClick, { capture: true });
+		this.registerDomEvent(activeDocument, 'auxclick', onLinkClick, { capture: true });
 	}
 
 	private updateStatusBar() {
@@ -408,7 +412,8 @@ export default class TargetPanePlugin extends Plugin {
 	}
 
 	private async loadSettings() {
-		this.settings = Object.assign({}, DEFAULT_SETTINGS, await this.loadData());
+		const data = (await this.loadData()) as Partial<TargetPaneSettings> | null;
+		this.settings = Object.assign({}, DEFAULT_SETTINGS, data ?? {});
 	}
 
 	private async saveSettings() {

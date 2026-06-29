@@ -104,6 +104,16 @@ Then enable both **Target Pane** and **Hot Reload** in the vault. For a producti
 npm run build    # type-checks, then emits a minified main.js
 ```
 
+### Releasing (maintainer)
+
+Releases are automated. Write notes in `release-notes/<version>.md`, then:
+
+```bash
+./scripts/release.sh patch    # or minor / major / an explicit X.Y.Z
+```
+
+`release.sh` bumps `package.json` / `manifest.json` / `versions.json`, commits, pushes, and pushes a version **tag**. Pushing a tag matching `[0-9]+.[0-9]+.[0-9]+` triggers [`.github/workflows/release.yml`](.github/workflows/release.yml), which runs `npm ci`, builds, attaches `main.js` / `manifest.json` / `styles.css` to a new GitHub release, and signs them with [build-provenance attestations](https://docs.github.com/actions/security-guides/using-artifact-attestations-to-establish-provenance-for-builds). Branch / work-in-progress pushes never trigger a release — only a version tag does.
+
 ## Contributing
 
 Contributions are very welcome — this started as a focused scratch-my-own-itch plugin, and

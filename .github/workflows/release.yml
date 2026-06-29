@@ -1,0 +1,67 @@
+name: Release
+
+# Runs ONLY when a version tag (e.g. 0.1.1) is pushed — never on branch commits,
+# so work-in-progress pushes to any branch will not trigger a release.
+on:
+  push:
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
+
+permissions:
+  contents: write # create the GitHub release
+  id-token: write # required to sign the build provenance attestation
+  attestations: write # write the attestation
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the tagged commit
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Verify the tag matches manifest.json version
+        run: |
+          MANIFEST_VERSION="$(node -p "require('./manifest.json').version")"
+          if [ "$GITHUB_REF_NAME" != "$MANIFEST_VERSION" ]; then
+            echo "::error::Tag '$GITHUB_REF_NAME' does not match manifest.json version '$MANIFEST_VERSION'. Aborting."
+            exit 1
+          fi
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Verify release assets exist
+        run: |
+          for f in main.js manifest.json styles.css; do
+            [ -f "$f" ] || { echo "::error::Expected release asset '$f' is missing after build."; exit 1; }
+          done
+
+      - name: Attest build provenance
+        uses: actions/attest-build-provenance@v4
+        with:
+          subject-path: |
+            main.js
+            manifest.json
+            styles.css
+
+      - name: Create GitHub release and upload assets
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          NOTES_FILE="release-notes/${GITHUB_REF_NAME}.md"
+          if [ -f "$NOTES_FILE" ]; then
+            gh release create "$GITHUB_REF_NAME" main.js manifest.json styles.css \
+              --title "$GITHUB_REF_NAME" --notes-file "$NOTES_FILE"
+          else
+            gh release create "$GITHUB_REF_NAME" main.js manifest.json styles.css \
+              --title "$GITHUB_REF_NAME" --generate-notes
+          fi

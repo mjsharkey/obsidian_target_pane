@@ -119,7 +119,7 @@ if [ "$NEEDS_BUMP" -eq 1 ]; then
 fi
 
 # --- commit version files + notes (and push any earlier unpushed commits) --
-git add package.json manifest.json versions.json "$NOTES_FILE"
+git add package.json package-lock.json manifest.json versions.json "$NOTES_FILE"
 if ! git diff --cached --quiet; then
   step "Committing..."
   git commit -m "Release $VERSION" >/dev/null || die "git commit failed."
